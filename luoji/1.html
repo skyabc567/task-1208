@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            width: 800px;
+            margin: auto;
+            margin-top: 100px;
+            display: flex;
+            justify-content: space-between;          
+        }
+
+        input {
+            width: 300px;
+            height: 200px;
+
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <input type="text" id="content">
+        <button onclick="base64()">base64编码</button>
+        <button onclick="base64Reverse()">base64译码</button>
+        <input type="text" id="content1">
+    </div>
+    <div>
+        <input type="text" id="content2">
+        <button onclick="base32()">base32编码</button>
+        <button onclick="base32Reverse()">base32译码</button>
+        <input type="text" id="content3">
+    </div>
+</body>
+<script>
+    // 实现base64编码
+
+    // 找到原文中每一个字符在ascii编码码表中对应的编码（查表）
+    function base64() {
+        var content = document.querySelector("#content").value;
+        var content1 = document.querySelector("#content1").value;
+        var arr = [];
+        var  res = "";
+        var base64 = "ABCDEFGHIjKLMNOPQRSTUVWXYZabcdefjghijklmnopqrstuvwxyz0123456789/+"
+        for(var i = 0; i < content.length; i++) {
+            var bincode = content[i].charCodeAt().toString(2).replace(/^/, "0000000").slice(-8)
+            arr.push(bincode)
+        }
+        var bincodestr = arr.join("");
+        var bincodestrz = bincodestr + ("0").repeat(6-(bincodestr.length % 6));
+        var bincode6list = bincodestrz.match(/[01]{6}/g)
+        for(var j = 0; j < bincode6list.length; j++) {
+            var index = parseInt(bincode6list[j], 2)
+            res += base64[index]
+        }
+        res = res + ("=").repeat(8-(res.length % 8));
+        document.querySelector("#content1").value = res
+        return res;
+    }
+
+    // ['01101010', '01100001', '01110110', '01100001']
+    // ['1101010', '1100001', '1110110', '1100001']
+    // ['011010', '100110', '000101', '110110', '011000', '010000']
+    // 110101001101011101101100010000
+
+
+    function base64Reverse() {
+        var content = document.querySelector("#content").value;
+        var content1 = document.querySelector("#content1").value;
+        var msg = content1.replace(/=/g, "");
+        var base64 = "ABCDEFGHIjKLMNOPQRSTUVWXYZabcdefjghijklmnopqrstuvwxyz0123456789/+"
+        var bincode6list = [];
+        for(var i = 0 ; i < msg.length; i++) {
+            bincode6list.push(base64.indexOf(msg[i]).toString(2));          
+        }
+        var bincodestrz = [];
+        for(var j = 0; j < bincode6list.length; j ++) {
+            bincodestrz.push(bincode6list[j].replace(/^/, "00000").slice(-6));
+        }
+        var bincodestr = bincodestrz.join("")
+        var bincodestr1 = bincodestr.replace(/[0]*$/, "");
+        var arr = bincodestr1.match(/[01]{8}/g);
+        var container = [];
+        for(var m = 0; m < arr.length; m++) {
+            var bincode = String.fromCharCode(parseInt(arr[m].slice(-7), 2));
+            container.push(bincode)
+        }
+        var res = container.join("");
+        document.querySelector("#content").value = res
+        return res
+    }
+    
+    function base32() {
+        var content2 = document.querySelector("#content2").value;
+        var content3 = document.querySelector("#content3").value;
+        var arr = [];
+        var base32 = "李王张刘陈杨赵黄周吴徐孙胡朱高林何郭马罗梁宋郑谢唐冯于董萧程曹袁";
+        for(var i = 0; i < content2.length; i++) {
+            var bincode = content2[i].charCodeAt().toString(2).replace(/^/, "0000000").slice(-8);
+            arr.push(bincode);
+        }
+        var bincodestr = arr.join("");
+        var bincodestrz = bincodestr + ("0").repeat(5-(bincodestr.length % 5));
+        var bincode6list = bincodestrz.match(/[01]{5}/g);
+        var res = "";
+        for(var j = 0; j < bincode6list.length; j++) {
+            var index = parseInt(bincode6list[j], 2)
+            res += base32[index];
+        }
+        res = res + ("=").repeat(8-(res.length % 8));
+        document.querySelector("#content3").value = res
+        return res;
+    }
+
+    function base32Reverse() {
+        var content2 = document.querySelector("#content2").value;
+        var content3 = document.querySelector("#content3").value;
+        var msg = content3.replace(/=/g, "");
+        var base32 = "李王张刘陈杨赵黄周吴徐孙胡朱高林何郭马罗梁宋郑谢唐冯于董萧程曹袁";
+        var bincode6list = [];
+        for(var i = 0 ; i < msg.length; i++) {
+            bincode6list.push(base32.indexOf(msg[i]).toString(2));          
+        }
+        var bincodestrz = [];
+        for(var j = 0; j < bincode6list.length; j ++) {
+            bincodestrz.push(bincode6list[j].replace(/^/, "0000").slice(-5));
+        }
+        var bincodestr = bincodestrz.join("")
+        var bincodestr1 = bincodestr.replace(/[0]*$/, "");
+        var arr = bincodestr1.match(/[01]{8}/g);
+        var container = [];
+        for(var m = 0; m < arr.length; m++) {
+            var bincode = String.fromCharCode(parseInt(arr[m].slice(-7), 2));
+            container.push(bincode)
+        }
+        var res = container.join("");
+        document.querySelector("#content2").value = res
+        return res
+    }
+</script>
+</html>

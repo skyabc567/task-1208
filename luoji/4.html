@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<img>
+    
+</body>
+<script>
+    var str = '<img class="foo bar" id="adw" style = "background:red;"></img>';
+    function extract() {
+        var Div = document.createElement("div");
+        Div.innerHTML = str.trim();
+        var res = {};
+        for(var i = 0; i < Div.childNodes.length; i++) {
+            if(Div.childNodes[i].nodeType == Node.ELEMENT_NODE) {
+                res.tagName = Div.childNodes[i].nodeName;
+            }
+        }
+        var attrs = {};
+        var tag = res.tagName
+        var TagName = document.querySelector("tag");
+        var attribute = TagName.attributes;
+        // for(var j = 0; j < TagName.attributes.length; j++) {
+        //     attrs = TagName.attributes[i]
+        // }
+        return attribute
+    }
+    console.log(extract())
+</script>
+</html>
